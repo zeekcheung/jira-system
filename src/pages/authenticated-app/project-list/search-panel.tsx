@@ -1,5 +1,12 @@
-import { User } from ".";
-
+// 系统用户接口
+export interface User {
+  id: number;
+  name: string;
+  email: string;
+  title: string;
+  organization: string;
+  token: string;
+}
 export interface Param {
   name: string;
   personId: string;
@@ -20,11 +27,11 @@ export default function SearchPanel({
     <form>
       <input
         type="text"
-        value={param.name}
-        onChange={(event) => {
+        defaultValue={param.name}
+        onCompositionEnd={(event) => {
           setParam({
             ...param,
-            name: event.target.value,
+            name: (event.target as HTMLInputElement).value,
           });
         }}
       />

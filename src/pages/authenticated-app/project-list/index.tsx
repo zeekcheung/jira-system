@@ -1,15 +1,8 @@
 import { useState, useEffect } from "react";
-import { stringify } from "qs";
 import { cleanObject, useDebounce, useMount } from "utils";
 import SearchPanel from "./search-panel";
 import List from "./list";
-
-const apiUrl = process.env.REACT_APP_API_URL;
-
-export interface User {
-  id: number;
-  name: string;
-}
+import { useHttp } from "utils/http";
 
 export default function ProjectList() {
   // 请求参数状态
@@ -21,23 +14,15 @@ export default function ProjectList() {
   // 负责人列表状态
   const [users, setUsers] = useState([]);
   const [list, setList] = useState([]);
+  // 登录API
+  const client = useHttp();
 
   useEffect(() => {
-    fetch(`${apiUrl}/projects?${stringify(cleanObject(debouncedParam))}`).then(
-      async (resp) => {
-        if (resp.ok) {
-          setList(await resp.json());
-        }
-      }
-    );
+    client("projects", { data: cleanObject(debouncedParam) }).then(setList);
   }, [debouncedParam]);
 
   useMount(() => {
-    fetch(`${apiUrl}/users`).then(async (resp) => {
-      if (resp.ok) {
-        setUsers(await resp.json());
-      }
-    });
+    client("users").then(setUsers);
   });
 
   return (

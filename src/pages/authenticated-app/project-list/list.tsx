@@ -1,4 +1,4 @@
-import { User } from "./index";
+import { User } from "./search-panel";
 
 export interface Project {
   id: number;
