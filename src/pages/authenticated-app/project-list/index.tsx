@@ -3,6 +3,7 @@ import { cleanObject, useDebounce, useMount } from "utils";
 import SearchPanel from "./search-panel";
 import List from "./list";
 import { useHttp } from "utils/http";
+import styled from "@emotion/styled";
 
 export default function ProjectList() {
   // 请求参数状态
@@ -19,6 +20,7 @@ export default function ProjectList() {
 
   useEffect(() => {
     client("projects", { data: cleanObject(debouncedParam) }).then(setList);
+    // eslint-disable-next-line
   }, [debouncedParam]);
 
   useMount(() => {
@@ -26,9 +28,14 @@ export default function ProjectList() {
   });
 
   return (
-    <div>
+    <Container>
+      <h1>项目列表</h1>
       <SearchPanel users={users} param={param} setParam={setParam} />
       <List users={users} list={list} />
-    </div>
+    </Container>
   );
 }
+
+const Container = styled.div`
+  padding: 3.2rem;
+`;

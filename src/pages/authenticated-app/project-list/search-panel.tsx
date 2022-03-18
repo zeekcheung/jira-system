@@ -1,3 +1,5 @@
+import { Form, Input, Select } from "antd";
+
 // 系统用户接口
 export interface User {
   id: number;
@@ -24,33 +26,38 @@ export default function SearchPanel({
   setParam,
 }: SearchPanelProp) {
   return (
-    <form>
-      <input
-        type="text"
-        defaultValue={param.name}
-        onCompositionEnd={(event) => {
-          setParam({
-            ...param,
-            name: (event.target as HTMLInputElement).value,
-          });
-        }}
-      />
-      <select
-        value={param.personId}
-        onChange={(event) => {
-          setParam({
-            ...param,
-            personId: event.target.value,
-          });
-        }}
-      >
-        <option value={""}>负责人</option>
-        {users.map((user) => (
-          <option value={user.id} key={user.id}>
-            {user.name}
-          </option>
-        ))}
-      </select>
-    </form>
+    <Form style={{ marginBottom: "2rem" }} layout="inline">
+      <Form.Item>
+        <Input
+          type="text"
+          placeholder="项目名"
+          defaultValue={param.name}
+          onCompositionEnd={(event) => {
+            setParam({
+              ...param,
+              name: (event.target as HTMLInputElement).value,
+            });
+          }}
+        />
+      </Form.Item>
+      <Form.Item>
+        <Select
+          value={param.personId}
+          onChange={(value) => {
+            setParam({
+              ...param,
+              personId: value,
+            });
+          }}
+        >
+          <Select.Option value={""}>负责人</Select.Option>
+          {users.map((user) => (
+            <Select.Option value={user.id} key={user.id}>
+              {user.name}
+            </Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
+    </Form>
   );
 }

@@ -8,13 +8,12 @@ export const isFalsy = (value: unknown) => (value === 0 ? false : !value);
 /**
  * 清除对象中属性值为假值的属性
  */
-export const cleanObject: (object: object) => object = (object) => {
+// 参数类型限定为狭义的对象类型，避免类型错误
+export const cleanObject = (object: { [key: string]: unknown }) => {
   const result = { ...object };
   Object.keys(object).forEach((key) => {
-    // @ts-ignore
     const value = object[key];
     if (isFalsy(value)) {
-      // @ts-ignore
       delete result[key];
     }
   });
