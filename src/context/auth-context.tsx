@@ -3,6 +3,8 @@ import * as auth from "auth-provider";
 import { User } from "pages/authenticated-app/project-list/search-panel";
 import { http } from "utils/http";
 import { useMount } from "utils";
+import { useAsync } from "utils/async";
+import { FullPageError, FullPageLoading } from "components/lib";
 
 /* 1.创建context，管理全局数据：user、login、register、logout */
 const AuthContext = React.createContext<
@@ -32,7 +34,15 @@ const bootstrapUser = async () => {
 /* 2.封装AuthContext.provider组件，提供全局数据：user、login、register、logout */
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   // 用户状态user为全局状态
-  const [user, setUser] = useState<User | null>(null);
+  const {
+    data: user,
+    setData: setUser,
+    error,
+    isIdle,
+    isLoading,
+    isError,
+    run,
+  } = useAsync<User | null>();
 
   // 再次封装login、register、logout函数，登录、注册、登出后修改user状态
   const login = (data: auth.Data) => auth.login(data).then(setUser);
@@ -40,7 +50,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = () => auth.logout().then(() => setUser(null));
 
   // 组件挂载时初始化user
-  useMount(() => bootstrapUser().then(setUser));
+  useMount(() => {
+    run(bootstrapUser());
+  });
+
+  if (isIdle || isLoading) {
+    return <FullPageLoading />;
+  }
+
+  if (isError) {
+    return <FullPageError error={error} />;
+  }
+
   return (
     <AuthContext.Provider
       children={children}

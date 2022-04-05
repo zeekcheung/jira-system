@@ -2,7 +2,7 @@ import { Form, Input, Select } from "antd";
 
 // 系统用户接口
 export interface User {
-  id: number;
+  id: string;
   name: string;
   email: string;
   title: string;
