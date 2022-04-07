@@ -1,13 +1,15 @@
 import styled from "@emotion/styled";
 import { Button, Form, Input } from "antd";
 import { useAuth } from "context/auth-context";
-import React from "react";
+import { useDocumentTitle } from "utils";
 
 export default function Login() {
   const { login } = useAuth();
 
   const handleSubmit = (values: { username: string; password: string }) =>
     login(values);
+
+  useDocumentTitle("登录", false);
 
   return (
     <Form name="login" onFinish={handleSubmit}>
@@ -18,7 +20,7 @@ export default function Login() {
         <Input
           type="text"
           id="username"
-          autoComplete="true"
+          autoComplete="username"
           placeholder="用户名"
         />
       </Form.Item>

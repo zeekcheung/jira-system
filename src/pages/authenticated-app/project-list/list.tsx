@@ -1,7 +1,9 @@
 import { Table, TableProps } from "antd";
-import dayjs from "dayjs";
+import { Link } from "react-router-dom";
 import { User } from "./search-panel";
+import dayjs from "dayjs";
 
+// TODO: 将 id 类型转化为 number
 export interface Project {
   id: number;
   name: string;
@@ -23,8 +25,10 @@ export default function List({ users, ...props }: ListProp) {
       columns={[
         {
           title: "名称",
-          dataIndex: "name",
           sorter: (a, b) => a.name.localeCompare(b.name),
+          render(value, { id, name }) {
+            return <Link to={`/projects/${id}`}>{name}</Link>;
+          },
         },
         {
           title: "部门",

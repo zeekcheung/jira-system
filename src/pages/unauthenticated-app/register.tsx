@@ -1,13 +1,15 @@
 import { Form, Input } from "antd";
 import { LongButton } from "./login";
 import { useAuth } from "context/auth-context";
-import React from "react";
+import { useDocumentTitle } from "utils";
 
 export default function Login() {
   const { register } = useAuth();
 
   const handleSubmit = (values: { username: string; password: string }) =>
     register(values);
+
+  useDocumentTitle("注册", false);
 
   return (
     <Form name="register" onFinish={handleSubmit}>

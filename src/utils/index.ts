@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 /**
  * 判断输入值是否为假值
@@ -45,4 +45,32 @@ export const useDebounce = <V>(value: V, delay?: number) => {
   }, [value, delay]);
 
   return debounceValue;
+};
+
+/**
+ * 重置路由，将页面url重置为原始url
+ */
+export const resetRoute = () => (window.location.href = window.location.origin);
+
+/**
+ * 组件挂载时修改页面title，组件卸载时还原页面title
+ * @param title 页面 title
+ * @param keepOnUnmount 组件卸载时是否保留当前title
+ */
+export const useDocumentTitle = (
+  title: string,
+  keepOnUnmount: boolean = true
+) => {
+  const oldTitle = useRef(document.title).current; // 旧的title
+
+  // 组件挂载时修改页面的title
+  useEffect(() => {
+    document.title = title;
+    // 组件卸载时还原页面的title
+    return () => {
+      if (!keepOnUnmount) {
+        document.title = oldTitle;
+      }
+    };
+  }, [title, keepOnUnmount, oldTitle]);
 };

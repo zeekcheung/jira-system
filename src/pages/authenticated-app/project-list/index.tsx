@@ -1,21 +1,23 @@
 import { useState } from "react";
-import { useDebounce } from "utils";
-import SearchPanel from "./search-panel";
-import List from "./list";
 import styled from "@emotion/styled";
 import { Typography } from "antd";
+import SearchPanel from "./search-panel";
+import List from "./list";
 import { useProjects } from "utils/projects";
+import { useDebounce, useDocumentTitle } from "utils";
 import { useUsers } from "utils/users";
+import { useUrlQueryParam } from "utils/url";
 
 export default function ProjectList() {
   // 请求参数状态
-  const [param, setParam] = useState({
-    name: "",
-    personId: "",
-  });
+  const [, setParam] = useState({ name: "", personId: "" });
+  const [keys] = useState<("name" | "personId")[]>(["name", "personId"]);
+  const [param] = useUrlQueryParam(keys);
   const debouncedParam = useDebounce(param, 1000);
   const { data: list, error, isLoading } = useProjects(debouncedParam);
   const { data: users } = useUsers();
+
+  useDocumentTitle("项目列表", false);
 
   return (
     <Container>
@@ -30,3 +32,5 @@ export default function ProjectList() {
 const Container = styled.div`
   padding: 3.2rem;
 `;
+
+ProjectList.whyDidYouRender = true;

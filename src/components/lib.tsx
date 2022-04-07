@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
 import { Spin, Typography } from "antd";
+import { DevTools } from "jira-dev-tool";
 
 // 全屏组件
 const FullPage = styled.div`
@@ -19,6 +20,7 @@ export const FullPageLoading = () => (
 // 全屏错误提示组件
 export const FullPageError = ({ error }: { error: Error | null }) => (
   <FullPage>
+    <DevTools />
     <Typography.Text type="danger">{error?.message}</Typography.Text>
   </FullPage>
 );
