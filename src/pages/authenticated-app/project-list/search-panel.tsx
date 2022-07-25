@@ -1,32 +1,29 @@
-import { Form, Input, Select } from "antd";
-
+import { Form, Input } from 'antd'
+import UserSelect from 'components/user-select'
+import { Project } from './list'
 // 系统用户接口
+
 export interface User {
-  id: string;
-  name: string;
-  email: string;
-  title: string;
-  organization: string;
-  token: string;
+  id: number
+  name: string
+  email: string
+  title: string
+  organization: string
+  token: string
 }
-export interface Param {
-  name: string;
-  personId: string;
-}
+
+type Param = Partial<Pick<Project, 'name' | 'personId'>>
 
 interface SearchPanelProp {
-  users: User[];
-  param: Param;
-  setParam: (param: Param) => void;
+  users: User[]
+  param: Param
+  setParam: (param: Param) => void
 }
 
-export default function SearchPanel({
-  users,
-  param,
-  setParam,
-}: SearchPanelProp) {
+export default function SearchPanel({ param, setParam }: SearchPanelProp) {
   return (
-    <Form style={{ marginBottom: "2rem" }} layout="inline">
+    <Form style={{ marginBottom: '2rem' }} layout="inline">
+      {/* TODO:添加收藏功能 */}
       <Form.Item>
         <Input
           type="text"
@@ -36,28 +33,17 @@ export default function SearchPanel({
             setParam({
               ...param,
               name: (event.target as HTMLInputElement).value,
-            });
+            })
           }}
         />
       </Form.Item>
       <Form.Item>
-        <Select
+        <UserSelect
           value={param.personId}
-          onChange={(value) => {
-            setParam({
-              ...param,
-              personId: value,
-            });
-          }}
-        >
-          <Select.Option value={""}>负责人</Select.Option>
-          {users.map((user) => (
-            <Select.Option value={user.id} key={user.id}>
-              {user.name}
-            </Select.Option>
-          ))}
-        </Select>
+          onChange={(value) => setParam({ ...param, personId: value || 0 })}
+          defaultOptionName={'负责人'}
+        />
       </Form.Item>
     </Form>
-  );
+  )
 }

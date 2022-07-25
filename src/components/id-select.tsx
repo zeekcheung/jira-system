@@ -1,20 +1,18 @@
-// TODO:封装 IdSelect 组件，解决select元素会将value值隐式转换为string类型的问题
-import React from "react";
-import { Raw } from "../types";
-import { Select } from "antd";
-import { valueType } from "antd/lib/statistic/utils";
+import { Select } from 'antd'
+import React from 'react'
+import { Raw } from '../types'
 
-type SelectProps = React.ComponentType<typeof Select>;
+type SelectProps = React.ComponentType<typeof Select>
 
 interface IdSelectProps
-  extends Omit<SelectProps, "value" | "onChange" | "options"> {
-  value: Raw | undefined | null;
+  extends Omit<SelectProps, 'value' | 'onChange' | 'options'> {
+  value: Raw | undefined | null
   // select会将value的类型转换为string，手动转换为number，使得数据保持一致
-  onChange: (value?: number) => void;
+  onChange: (value?: number) => void
   // 默认选项名
-  defaultOptionName?: string;
+  defaultOptionName?: string
   // 其余选项的value和name
-  options?: { name: string; id: number }[];
+  options?: { name: string; id: number }[]
 }
 
 /**
@@ -26,11 +24,11 @@ interface IdSelectProps
  * @returns
  */
 export default function IdSelect(props: IdSelectProps) {
-  const { value, onChange, defaultOptionName, options, ...restProps } = props;
+  const { value, onChange, defaultOptionName, options, ...restProps } = props
 
   return (
     <Select
-      value={toNumber(value)}
+      value={options?.length ? toNumber(value) : 0}
       onChange={(value) => onChange(toNumber(value) || undefined)}
       {...restProps}
     >
@@ -43,7 +41,7 @@ export default function IdSelect(props: IdSelectProps) {
         </Select.Option>
       ))}
     </Select>
-  );
+  )
 }
 
-const toNumber = (value: unknown) => (isNaN(Number(value)) ? 0 : Number(value));
+const toNumber = (value: unknown) => (isNaN(Number(value)) ? 0 : Number(value))

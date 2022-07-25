@@ -1,64 +1,82 @@
-import { Table, TableProps } from "antd";
-import { Link } from "react-router-dom";
-import { User } from "./search-panel";
-import dayjs from "dayjs";
+import { Table, TableProps } from 'antd'
+import { Pin } from 'components/pin'
+import dayjs from 'dayjs'
+import { Link } from 'react-router-dom'
+import { useEditProject } from 'utils/projects'
+import { User } from './search-panel'
 
-// TODO: 将 id 类型转化为 number
 export interface Project {
-  id: number;
-  name: string;
-  personId: string;
-  pin: boolean;
-  organization: string;
-  created: number;
+  id: number
+  name: string
+  personId: number
+  pin: boolean
+  organization: string
+  created: number
 }
 
 interface ListProp extends TableProps<Project> {
-  users: User[];
+  users: User[]
+  refresh: () => void
 }
 
 export default function List({ users, ...props }: ListProp) {
+  const { mutate } = useEditProject()
+  // 请求更新后，重新获取项目列表
+  const pinProject = (id: number) => (pin: boolean) =>
+    mutate({ id, pin }).then(props.refresh)
+
   return (
     <Table
-      rowKey={"id"}
+      rowKey={'id'}
       pagination={false}
       columns={[
         {
-          title: "名称",
-          sorter: (a, b) => a.name.localeCompare(b.name),
-          render(value, { id, name }) {
-            return <Link to={`/projects/${id}`}>{name}</Link>;
+          title: <Pin checked={true} />,
+          render(value, project) {
+            return (
+              <Pin
+                checked={project.pin}
+                onCheckedChange={pinProject(project.id)}
+              />
+            )
           },
         },
         {
-          title: "部门",
-          dataIndex: "organization",
+          title: '名称',
+          sorter: (a, b) => a.name.localeCompare(b.name),
+          render(value, { id, name }) {
+            return <Link to={`/projects/${id}`}>{name}</Link>
+          },
         },
         {
-          title: "负责人",
+          title: '部门',
+          dataIndex: 'organization',
+        },
+        {
+          title: '负责人',
           render(value, project) {
             return (
               <span>
                 {users.find((user) => user.id === project.personId)?.name ||
-                  "未知"}
+                  '未知'}
               </span>
-            );
+            )
           },
         },
         {
-          title: "创建时间",
+          title: '创建时间',
           render(value, project) {
             return (
               <span>
                 {project.created
-                  ? dayjs(project.created).format("YYYY-MM-DD")
-                  : "无"}
+                  ? dayjs(project.created).format('YYYY-MM-DD')
+                  : '无'}
               </span>
-            );
+            )
           },
         },
       ]}
       {...props}
     />
-  );
+  )
 }

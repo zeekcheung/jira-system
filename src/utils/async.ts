@@ -1,59 +1,71 @@
-/* 
+/*
   统一管理异步操作的状态
  */
 
-import { useState } from "react";
+import { useState } from 'react'
 
 interface State<D> {
-  text: "pending" | "loading" | "success" | "error";
-  data: D | null;
-  error: Error | null;
+  text: 'pending' | 'loading' | 'success' | 'error'
+  data: D | null
+  error: Error | null
 }
 
 export const useAsync = <D>(
-  initialState: State<D> = { text: "pending", data: null, error: null }
+  initialState: State<D> = { text: 'pending', data: null, error: null }
 ) => {
-  const [state, setState] = useState<State<D>>(initialState);
+  const [state, setState] = useState<State<D>>(initialState)
+  const [retry, setRetry] = useState(() => () => {})
 
   // 请求成功，设置data
   const setData = (data: D) => {
     setState({
-      text: "success",
+      text: 'success',
       data,
       error: null,
-    });
-  };
+    })
+  }
 
   // 请求失败，设置error
   const setError = (error: Error) => {
     setState({
-      text: "error",
+      text: 'error',
       data: null,
       error,
-    });
-  };
+    })
+  }
 
   // 执行异步操作，修改状态
-  const run = (promise: Promise<D>) => {
+  const run = (promise: Promise<D>, config?: { retry: () => Promise<D> }) => {
+    if (!promise || !promise.then) {
+      throw new Error('请传入 Promise 类型数据')
+    }
+
+    setRetry(() => () => {
+      if (config?.retry) {
+        run(config?.retry(), config)
+      }
+    })
+
     return promise
       .then((data) => {
-        setData(data);
-        return data;
+        setData(data)
+        return data
       })
       .catch((error) => {
-        setError(error);
-        return error;
-      });
-  };
+        setError(error)
+        return error
+      })
+  }
 
   return {
-    isIdle: state.text === "pending",
-    isLoading: state.text === "loading",
-    isSuccess: state.text === "success",
-    isError: state.text === "error",
+    isIdle: state.text === 'pending',
+    isLoading: state.text === 'loading',
+    isSuccess: state.text === 'success',
+    isError: state.text === 'error',
     setData,
     setError,
     run,
+    retry,
     ...state,
-  };
-};
+  }
+}
