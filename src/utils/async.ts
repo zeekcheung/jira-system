@@ -2,7 +2,7 @@
   统一管理异步操作的状态
  */
 
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useMountRef } from 'utils'
 
 interface State<D> {
@@ -18,13 +18,13 @@ export const useAsync = <D>(
   const [retry, setRetry] = useState(() => () => {})
 
   // 请求成功，设置data
-  const setData = (data: D) => {
+  const setData = useCallback((data: D) => {
     setState({
       text: 'success',
       data,
       error: null,
     })
-  }
+  }, [])
 
   // 请求失败，设置error
   const setError = (error: Error) => {
@@ -38,27 +38,30 @@ export const useAsync = <D>(
   const mountRef = useMountRef()
 
   // 执行异步操作，修改状态
-  const run = (promise: Promise<D>, config?: { retry: () => Promise<D> }) => {
-    if (!promise || !promise.then) {
-      throw new Error('请传入 Promise 类型数据')
-    }
-
-    setRetry(() => () => {
-      if (config?.retry) {
-        run(config?.retry(), config)
+  const run = useCallback(
+    (promise: Promise<D>, config?: { retry: () => Promise<D> }) => {
+      if (!promise || !promise.then) {
+        throw new Error('请传入 Promise 类型数据')
       }
-    })
 
-    return promise
-      .then((data) => {
-        mountRef.current && setData(data)
-        return data
+      setRetry(() => () => {
+        if (config?.retry) {
+          run(config?.retry(), config)
+        }
       })
-      .catch((error) => {
-        setError(error)
-        return error
-      })
-  }
+
+      return promise
+        .then((data) => {
+          mountRef.current && setData(data)
+          return data
+        })
+        .catch((error) => {
+          setError(error)
+          return error
+        })
+    },
+    [mountRef, setData]
+  )
 
   return {
     isIdle: state.text === 'pending',

@@ -1,5 +1,5 @@
 import { Project } from 'pages/authenticated-app/project-list/list'
-import { useEffect, useMemo } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import { cleanObject } from 'utils'
 import { useAsync } from './async'
 import { useHttp } from './http'
@@ -8,16 +8,18 @@ import { useUrlQueryParam } from './url'
 export const useProjects = (param?: Partial<Project>) => {
   const { run, ...result } = useAsync<Project[]>()
   const client = useHttp()
+  const _param = useMemo(() => param, [param])
 
-  const fetchProjects = () =>
-    client('projects', { data: cleanObject(param || {}) })
+  const fetchProjects = useCallback(
+    () => client('projects', { data: cleanObject(_param || {}) }),
+    [client, _param]
+  )
 
   useEffect(() => {
     run(fetchProjects(), {
       retry: fetchProjects,
     })
-    // eslint-disable-next-line
-  }, [param])
+  }, [fetchProjects, run])
 
   return result
 }
