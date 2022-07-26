@@ -23,7 +23,6 @@ interface SearchPanelProp {
 export default function SearchPanel({ param, setParam }: SearchPanelProp) {
   return (
     <Form style={{ marginBottom: '2rem' }} layout="inline">
-      {/* TODO:添加收藏功能 */}
       <Form.Item>
         <Input
           type="text"

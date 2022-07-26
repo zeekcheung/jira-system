@@ -3,6 +3,7 @@
  */
 
 import { useState } from 'react'
+import { useMountRef } from 'utils'
 
 interface State<D> {
   text: 'pending' | 'loading' | 'success' | 'error'
@@ -34,6 +35,8 @@ export const useAsync = <D>(
     })
   }
 
+  const mountRef = useMountRef()
+
   // 执行异步操作，修改状态
   const run = (promise: Promise<D>, config?: { retry: () => Promise<D> }) => {
     if (!promise || !promise.then) {
@@ -48,7 +51,7 @@ export const useAsync = <D>(
 
     return promise
       .then((data) => {
-        setData(data)
+        mountRef.current && setData(data)
         return data
       })
       .catch((error) => {
