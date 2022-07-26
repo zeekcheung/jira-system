@@ -19,7 +19,7 @@ interface ListProp extends TableProps<Project> {
   refresh: () => void
 }
 
-export default function List({ users, ...props }: ListProp) {
+export const List = ({ users, ...props }: ListProp) => {
   const { mutate } = useEditProject()
   // 请求更新后，重新获取项目列表
   const pinProject = (id: number) => (pin: boolean) =>

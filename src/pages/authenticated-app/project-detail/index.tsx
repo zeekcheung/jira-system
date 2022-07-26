@@ -1,7 +1,7 @@
-import { Outlet } from "react-router";
-import { Link } from "react-router-dom";
+import { Outlet } from 'react-router'
+import { Link } from 'react-router-dom'
 
-export default function ProjectDetail() {
+export const ProjectDetail = () => {
   return (
     <div>
       {/* 注意：链接到子路由时，路径不需要斜杠，和配置子路由规则时一样 */}
@@ -11,5 +11,5 @@ export default function ProjectDetail() {
       {/* 指定子路由的出口 */}
       <Outlet />
     </div>
-  );
+  )
 }

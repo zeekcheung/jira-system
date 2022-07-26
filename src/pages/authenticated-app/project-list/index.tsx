@@ -1,12 +1,12 @@
 import styled from '@emotion/styled'
 import { Typography } from 'antd'
-import SearchPanel from './search-panel'
-import List from './list'
+import { SearchPanel } from './search-panel'
+import { List } from './list'
 import { useProjects, useProjectsSearchParam } from 'utils/projects'
 import { useDebounce, useDocumentTitle } from 'utils'
 import { useUsers } from 'utils/users'
 
-export default function ProjectList() {
+export const ProjectList = () => {
   useDocumentTitle('项目列表', false)
 
   const [param, setParam] = useProjectsSearchParam()

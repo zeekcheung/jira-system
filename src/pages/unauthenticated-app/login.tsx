@@ -1,21 +1,21 @@
-import styled from "@emotion/styled";
-import { Button, Form, Input } from "antd";
-import { useAuth } from "context/auth-context";
-import { useDocumentTitle } from "utils";
+import styled from '@emotion/styled'
+import { Button, Form, Input } from 'antd'
+import { useAuth } from 'context/auth-context'
+import { useDocumentTitle } from 'utils'
 
-export default function Login() {
-  const { login } = useAuth();
+export const Login = () => {
+  const { login } = useAuth()
 
   const handleSubmit = (values: { username: string; password: string }) =>
-    login(values);
+    login(values)
 
-  useDocumentTitle("登录", false);
+  useDocumentTitle('登录', false)
 
   return (
     <Form name="login" onFinish={handleSubmit}>
       <Form.Item
         name="username"
-        rules={[{ required: true, message: "请输入用户名" }]}
+        rules={[{ required: true, message: '请输入用户名' }]}
       >
         <Input
           type="text"
@@ -26,7 +26,7 @@ export default function Login() {
       </Form.Item>
       <Form.Item
         name="password"
-        rules={[{ required: true, message: "请输入密码" }]}
+        rules={[{ required: true, message: '请输入密码' }]}
       >
         <Input
           type="password"
@@ -41,9 +41,9 @@ export default function Login() {
         </LongButton>
       </Form.Item>
     </Form>
-  );
+  )
 }
 
 export const LongButton = styled(Button)`
   width: 100%;
-`;
+`

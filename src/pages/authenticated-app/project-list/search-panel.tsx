@@ -20,7 +20,7 @@ interface SearchPanelProp {
   setParam: (param: Param) => void
 }
 
-export default function SearchPanel({ param, setParam }: SearchPanelProp) {
+export const SearchPanel = ({ param, setParam }: SearchPanelProp) => {
   return (
     <Form style={{ marginBottom: '2rem' }} layout="inline">
       <Form.Item>
