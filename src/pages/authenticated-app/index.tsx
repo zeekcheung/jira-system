@@ -7,8 +7,8 @@ import { Button, Dropdown, Menu } from 'antd'
 import { ButtonNoPadding } from 'components/lib'
 import { ProjectPopover } from 'components/project-popover'
 import { useAuth } from 'context/auth-context'
-import { useState } from 'react'
 import { resetRoute } from 'utils'
+import { useProjectModal } from 'utils/projects'
 import { Epic } from './epic'
 import { Kanban } from './kanban'
 import { ProjectDetail } from './project-detail'
@@ -16,14 +16,13 @@ import { ProjectList } from './project-list'
 import { ProjectModal } from './project-list/project-modal'
 
 export const AuthenticatedApp = () => {
-  const [modalVisible, setModalVisible] = useState(false)
-  const handleOpenModal = (open: boolean) => () => setModalVisible(open)
+  const { modalVisible, openModal, closeModal } = useProjectModal()
 
   return (
     <Container>
       <PageHeader
         projectButton={
-          <ButtonNoPadding type={'link'} onClick={handleOpenModal(true)}>
+          <ButtonNoPadding type={'link'} onClick={openModal}>
             创建项目
           </ButtonNoPadding>
         }
@@ -38,7 +37,7 @@ export const AuthenticatedApp = () => {
                 projectButton={
                   <Button
                     type={'link'}
-                    onClick={handleOpenModal(true)}
+                    onClick={openModal}
                     style={{ float: 'right' }}
                   >
                     新建项目
@@ -60,7 +59,7 @@ export const AuthenticatedApp = () => {
                 projectButton={
                   <Button
                     type={'link'}
-                    onClick={handleOpenModal(true)}
+                    onClick={openModal}
                     style={{ float: 'right' }}
                   >
                     新建项目
@@ -71,7 +70,7 @@ export const AuthenticatedApp = () => {
           />
         </Routes>
       </Main>
-      <ProjectModal visible={modalVisible} onClose={handleOpenModal(false)} />
+      <ProjectModal visible={modalVisible} onClose={closeModal} />
     </Container>
   )
 }

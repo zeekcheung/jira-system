@@ -71,3 +71,14 @@ export const useAddProject = () => {
 
   return { mutate, ...result }
 }
+
+export const useProjectModal = () => {
+  const [{ projectCreate }, setProjectCreate] = useUrlQueryParam([
+    'projectCreate',
+  ])
+
+  const openModal = () => setProjectCreate({ projectCreate: true })
+  const closeModal = () => setProjectCreate({ projectCreate: undefined })
+
+  return { modalVisible: projectCreate === 'true', openModal, closeModal }
+}
