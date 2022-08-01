@@ -1,5 +1,5 @@
 import { Form, Input } from 'antd'
-import UserSelect from 'components/user-select'
+import { UserSelect } from 'components/user-select'
 import { Project } from './list'
 // 系统用户接口
 

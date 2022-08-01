@@ -4,38 +4,79 @@ import { ReactComponent as SoftwareLogo } from '../../assets/software-logo.svg'
 import { Route, Routes } from 'react-router'
 // 从 react-router-dom 库中引入路由的运行环境
 import { Button, Dropdown, Menu } from 'antd'
+import { ButtonNoPadding } from 'components/lib'
+import { ProjectPopover } from 'components/project-popover'
 import { useAuth } from 'context/auth-context'
-import { BrowserRouter as Router } from 'react-router-dom'
+import { useState } from 'react'
 import { resetRoute } from 'utils'
 import { Epic } from './epic'
 import { Kanban } from './kanban'
 import { ProjectDetail } from './project-detail'
 import { ProjectList } from './project-list'
+import { ProjectModal } from './project-list/project-modal'
 
 export const AuthenticatedApp = () => {
+  const [modalVisible, setModalVisible] = useState(false)
+  const handleOpenModal = (open: boolean) => () => setModalVisible(open)
+
   return (
     <Container>
-      <PageHeader />
+      <PageHeader
+        projectButton={
+          <ButtonNoPadding type={'link'} onClick={handleOpenModal(true)}>
+            创建项目
+          </ButtonNoPadding>
+        }
+      />
       <Main>
         {/* 配置路由规则 */}
-        <Router>
-          <Routes>
-            <Route path="/projects" element={<ProjectList />} />
-            {/* 嵌套路由 */}
-            <Route path="/projects/:projectId" element={<ProjectDetail />}>
-              <Route path="kanban" element={<Kanban />} />
-              <Route path="epic" element={<Epic />} />
-            </Route>
-            {/* 默认路由：No match route */}
-            <Route path="*" element={<ProjectList />} />
-          </Routes>
-        </Router>
+        <Routes>
+          <Route
+            path="/projects"
+            element={
+              <ProjectList
+                projectButton={
+                  <Button
+                    type={'link'}
+                    onClick={handleOpenModal(true)}
+                    style={{ float: 'right' }}
+                  >
+                    新建项目
+                  </Button>
+                }
+              />
+            }
+          />
+          {/* 嵌套路由 */}
+          <Route path="/projects/:projectId" element={<ProjectDetail />}>
+            <Route path="kanban" element={<Kanban />} />
+            <Route path="epic" element={<Epic />} />
+          </Route>
+          {/*No match route */}
+          <Route
+            path="*"
+            element={
+              <ProjectList
+                projectButton={
+                  <Button
+                    type={'link'}
+                    onClick={handleOpenModal(true)}
+                    style={{ float: 'right' }}
+                  >
+                    新建项目
+                  </Button>
+                }
+              />
+            }
+          />
+        </Routes>
       </Main>
+      <ProjectModal visible={modalVisible} onClose={handleOpenModal(false)} />
     </Container>
   )
 }
 
-const PageHeader = () => {
+const PageHeader = ({ projectButton }: { projectButton: JSX.Element }) => {
   return (
     <Header between={true}>
       <HeaderLeft gap={true}>
@@ -45,7 +86,7 @@ const PageHeader = () => {
             color={'rgb(38, 132, 255)'}
           ></SoftwareLogo>
         </Button>
-        <h2>项目</h2>
+        <ProjectPopover projectButton={projectButton} />
         <h2>用户</h2>
       </HeaderLeft>
       <HeaderRight>

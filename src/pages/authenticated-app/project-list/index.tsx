@@ -1,12 +1,16 @@
 import styled from '@emotion/styled'
 import { Typography } from 'antd'
-import { SearchPanel } from './search-panel'
-import { List } from './list'
-import { useProjects, useProjectsSearchParam } from 'utils/projects'
 import { useDebounce, useDocumentTitle } from 'utils'
+import { useProjects, useProjectsSearchParam } from 'utils/projects'
 import { useUsers } from 'utils/users'
+import { List } from './list'
+import { SearchPanel } from './search-panel'
 
-export const ProjectList = () => {
+export const ProjectList = ({
+  projectButton,
+}: {
+  projectButton: JSX.Element
+}) => {
   useDocumentTitle('项目列表', false)
 
   const [param, setParam] = useProjectsSearchParam()
@@ -20,7 +24,10 @@ export const ProjectList = () => {
 
   return (
     <Container>
-      <h1>项目列表</h1>
+      <h1>
+        项目列表
+        {projectButton}
+      </h1>
       <SearchPanel users={users || []} param={param} setParam={setParam} />
       <Typography.Text type="danger">{error?.message}</Typography.Text>
       <List
@@ -28,6 +35,7 @@ export const ProjectList = () => {
         users={users || []}
         dataSource={list || []}
         loading={isLoading}
+        projectButton={projectButton}
       />
     </Container>
   )

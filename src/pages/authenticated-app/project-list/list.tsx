@@ -1,4 +1,4 @@
-import { Table, TableProps } from 'antd'
+import { Button, Dropdown, Menu, Space, Table, TableProps } from 'antd'
 import { Pin } from 'components/pin'
 import dayjs from 'dayjs'
 import { Link } from 'react-router-dom'
@@ -17,9 +17,10 @@ export interface Project {
 interface ListProp extends TableProps<Project> {
   users: User[]
   refresh: () => void
+  projectButton: JSX.Element
 }
 
-export const List = ({ users, ...props }: ListProp) => {
+export const List = ({ users, projectButton, ...props }: ListProp) => {
   const { mutate } = useEditProject()
   // 请求更新后，重新获取项目列表
   const pinProject = (id: number) => (pin: boolean) =>
@@ -72,6 +73,28 @@ export const List = ({ users, ...props }: ListProp) => {
                   ? dayjs(project.created).format('YYYY-MM-DD')
                   : '无'}
               </span>
+            )
+          },
+        },
+        {
+          title: '',
+          render(value, project) {
+            return (
+              <Dropdown
+                overlay={
+                  <Menu>
+                    <Menu.Item key={'edit'}>{projectButton}</Menu.Item>
+                    <Menu.Item key={'delete'}>
+                      <Button type={'link'}>删除项目</Button>
+                    </Menu.Item>
+                  </Menu>
+                }
+                trigger={['click']}
+              >
+                <Space>
+                  <Button type={'link'}>...</Button>
+                </Space>
+              </Dropdown>
             )
           },
         },
