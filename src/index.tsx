@@ -1,7 +1,6 @@
 import 'antd/dist/antd.less'
 import AppProvider from 'context'
 import { DevTools, loadServer } from 'jira-dev-tool'
-import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'react-redux'
 import { BrowserRouter as Router } from 'react-router-dom'
@@ -12,16 +11,14 @@ import './whyr'
 
 loadServer(() =>
   ReactDOM.render(
-    <React.StrictMode>
-      <Provider store={store}>
-        <AppProvider>
-          <DevTools />
-          <Router>
-            <App />
-          </Router>
-        </AppProvider>
-      </Provider>
-    </React.StrictMode>,
+    <Provider store={store}>
+      <AppProvider>
+        <DevTools />
+        <Router>
+          <App />
+        </Router>
+      </AppProvider>
+    </Provider>,
     document.getElementById('root')
   )
 )

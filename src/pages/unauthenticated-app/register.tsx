@@ -1,7 +1,7 @@
 import { Form, Input } from 'antd'
-import { LongButton } from './login'
 import { useAuth } from 'context/auth-context'
 import { useDocumentTitle } from 'utils'
+import { LongButton } from './login'
 
 export const Register = () => {
   const { register } = useAuth()
@@ -23,7 +23,12 @@ export const Register = () => {
         name={'password'}
         rules={[{ required: true, message: '请输入密码' }]}
       >
-        <Input type="password" id="password" placeholder="密码" />
+        <Input
+          type="password"
+          id="password"
+          placeholder="密码"
+          autoComplete="current-password"
+        />
       </Form.Item>
       <Form.Item>
         <LongButton type="primary" htmlType="submit">
