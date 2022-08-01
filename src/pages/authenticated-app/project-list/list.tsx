@@ -2,6 +2,7 @@ import { Button, Dropdown, Menu, Space, Table, TableProps } from 'antd'
 import { Pin } from 'components/pin'
 import dayjs from 'dayjs'
 import { Link } from 'react-router-dom'
+import { useHandleModal } from 'store/slices/project-slice'
 import { useEditProject } from 'utils/projects'
 import { User } from './search-panel'
 
@@ -17,14 +18,15 @@ export interface Project {
 interface ListProp extends TableProps<Project> {
   users: User[]
   refresh: () => void
-  projectButton: JSX.Element
 }
 
-export const List = ({ users, projectButton, ...props }: ListProp) => {
+export const List = ({ users, ...props }: ListProp) => {
   const { mutate } = useEditProject()
   // 请求更新后，重新获取项目列表
   const pinProject = (id: number) => (pin: boolean) =>
     mutate({ id, pin }).then(props.refresh)
+
+  const { handleOpenModal } = useHandleModal()
 
   return (
     <Table
@@ -83,7 +85,15 @@ export const List = ({ users, projectButton, ...props }: ListProp) => {
               <Dropdown
                 overlay={
                   <Menu>
-                    <Menu.Item key={'edit'}>{projectButton}</Menu.Item>
+                    <Menu.Item key={'edit'}>
+                      <Button
+                        type={'link'}
+                        onClick={handleOpenModal}
+                        style={{ float: 'right' }}
+                      >
+                        新建项目
+                      </Button>
+                    </Menu.Item>
                     <Menu.Item key={'delete'}>
                       <Button type={'link'}>删除项目</Button>
                     </Menu.Item>

@@ -1,16 +1,20 @@
 import { Dropdown, Menu } from 'antd'
 import MenuDivider from 'antd/lib/menu/MenuDivider'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router'
+import { openProjectModal } from 'store/slices/project-slice'
 import { useProjects } from 'utils/projects'
+import { ButtonNoPadding } from './lib'
 
-export const ProjectPopover = ({
-  projectButton,
-}: {
-  projectButton: JSX.Element
-}) => {
+export const ProjectPopover = () => {
   const { data: projects } = useProjects()
   const pinnedProjects = projects?.filter((project) => project.pin)
+
   const navigate = useNavigate()
+
+  const dispatch = useDispatch()
+  const handleOpenModal = () => dispatch(openProjectModal())
+
   return (
     <Dropdown
       overlay={
@@ -27,7 +31,11 @@ export const ProjectPopover = ({
             ))}
           </Menu.ItemGroup>
           <MenuDivider />
-          <Menu.Item>{projectButton}</Menu.Item>
+          <Menu.Item>
+            <ButtonNoPadding type={'link'} onClick={handleOpenModal}>
+              创建项目
+            </ButtonNoPadding>
+          </Menu.Item>
         </Menu>
       }
       overlayStyle={{ width: '20em' }}
